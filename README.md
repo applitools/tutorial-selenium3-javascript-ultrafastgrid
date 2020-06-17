@@ -10,6 +10,6 @@
     * Login to Applitools > Click on the Person icon > My API Key
     * Linux/Mac: export APPLITOOLS_API_KEY=<your_key>
     * Windows: set APPLITOOLS_API_KEY=<your_key>
-    * Don't forget to change the example with your own API key   
+    * Don't forget to change the example with your own API key
 4. `npm install`
-5. `npm run test`
+5. `npm test`
