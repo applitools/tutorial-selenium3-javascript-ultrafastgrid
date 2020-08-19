@@ -66,7 +66,7 @@ describe('DemoApp - Ultrafast Grid', function () {
     await eyes.check("App Window", Target.window().fully());
 
     // Call Close on eyes to let the server know it should display the results
-    await eyes.closeAsync();
+    await eyes.close();
   });
 
   after(async () => {
@@ -74,11 +74,11 @@ describe('DemoApp - Ultrafast Grid', function () {
     await driver.quit();
 
     // If the test was aborted before eyes.close was called, ends the test as aborted.
-    await eyes.abortAsync();
+    await eyes.abortIfNotClosed();
 
     // we pass false to this method to suppress the exception that is thrown if we
     // find visual differences
-    const allTestResults = await runner.getAllTestResults();
+    const allTestResults = await runner.getAllTestResults(false);
     console.log(allTestResults);
   });
 });
