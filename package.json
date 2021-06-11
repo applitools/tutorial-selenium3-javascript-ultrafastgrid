@@ -9,7 +9,6 @@
   "license": "ISC",
   "dependencies": {
     "@applitools/eyes-selenium": "latest",
-    "chromedriver": "latest",
     "mocha": "latest",
     "selenium-webdriver": "^3.6.0"
   }

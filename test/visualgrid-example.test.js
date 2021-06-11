@@ -1,6 +1,7 @@
 'use strict';
 
 const { Builder, By } = require('selenium-webdriver');
+const { Options } = require('selenium-webdriver/chrome')
 const { Eyes, VisualGridRunner, RunnerOptions, Target, RectangleSize, Configuration, BatchInfo, BrowserType, DeviceName, ScreenOrientation} = require('@applitools/eyes-selenium');
 
 describe('DemoApp - Ultrafast Grid', function () {
@@ -8,13 +9,16 @@ describe('DemoApp - Ultrafast Grid', function () {
 
   before(async () => {
 
+    const options = new Options();
+    if (process.env.CI === 'true') options.headless();
     // Create a new chrome web driver
     driver = await new Builder()
         .forBrowser('chrome')
+        .setChromeOptions(options)
         .build();
 
     // Create a runner with concurrency of 1
-    const runnerOptions = new RunnerOptions().testConcurrency(1)
+    const runnerOptions = new RunnerOptions().testConcurrency(5)
     runner = new VisualGridRunner(runnerOptions);
 
     // Create Eyes object with the runner, meaning it'll be a Visual Grid eyes.
@@ -24,7 +28,7 @@ describe('DemoApp - Ultrafast Grid', function () {
     let conf = new Configuration()
 
     // You can get your api key from the Applitools dashboard
-    conf.setApiKey('APPLITOOLS_API_KEY');
+    conf.setApiKey(process.env.APPLITOOLS_API_KEY);
 
     // create a new batch info instance and set it to the configuration
     conf.setBatch(new BatchInfo("Ultrafast Batch"));
@@ -48,7 +52,7 @@ describe('DemoApp - Ultrafast Grid', function () {
 
   it('ultraFastTest', async () => {
     // Call Open on eyes to initialize a test session
-    await eyes.open(driver, 'Demo App', 'Ultrafast grid demo', new RectangleSize(800, 600));
+    await eyes.open(driver, 'Demo App - selenium3 ufg', 'Ultrafast grid demo', new RectangleSize(800, 600));
 
     // Navigate the browser to the "ACME" demo app.
     // ⭐️ Note to see visual bugs, run the test using the above URL for the 1st run.
@@ -75,11 +79,11 @@ describe('DemoApp - Ultrafast Grid', function () {
     await driver.quit();
 
     // If the test was aborted before eyes.close was called, ends the test as aborted.
-    await eyes.abortIfNotClosed();
+    await eyes.abort();
 
     // we pass false to this method to suppress the exception that is thrown if we
     // find visual differences
-    const allTestResults = await runner.getAllTestResults(false);
+    const allTestResults = await runner.getAllTestResults();
     console.log(allTestResults);
   });
 });
